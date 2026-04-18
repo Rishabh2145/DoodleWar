@@ -1,12 +1,25 @@
+import json
 import torch
+from PIL import Image
+from io import BytesIO
+from .model_loader import model, transform
 
-MODEL_PATH = "models/model.pth"
+# Load label map
+with open("app/label_map.json") as f:
+    label_map = json.load(f)
 
-model = torch.load(MODEL_PATH, map_location=torch.device("cpu"))
-model.eval()
+def predict_image(image_bytes):
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
+    image = transform(image).unsqueeze(0)
 
-def predict(input_tensor):
     with torch.no_grad():
-        output = model(input_tensor)
-        predicted = torch.argmax(output, dim=1)
-    return predicted.item()
+        outputs = model(image)
+        _, predicted = torch.max(outputs, 1)
+
+    class_index = str(predicted.item())
+    label = label_map[class_index]
+
+    return {
+        "class_index": class_index,
+        "label": label
+    }
