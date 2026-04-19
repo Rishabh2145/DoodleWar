@@ -60,7 +60,7 @@ export default function Home() {
           text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     />
 
-                                    <Button title='Join Room' link='/battleground/room'/>
+                                    <Button title='Join Room' link='/battleground/create'/>
                                 </div>
                             )}
 
@@ -82,7 +82,7 @@ export default function Home() {
                                         Play instantly without joining a room
                                     </p>
 
-                                    <Button title='Start Solo' link='/battleground/play'/>
+                                    <Button title='Start Solo' link='/battleground/solo'/>
                                 </div>
                             )}
                         </div>
