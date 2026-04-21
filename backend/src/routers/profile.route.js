@@ -6,7 +6,7 @@ const router = Router();
 /**
  * @desc Accessing the user details from the access token provided
  * @route GET /api/profile/me
- * @access private
+ * @access protected
  */
 router.get('/me', getProfile);
 

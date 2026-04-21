@@ -1,18 +1,19 @@
+require('dotenv').config()
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const bodyParser = require('body-parser');
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const cookieParser = require("cookie-parser");
 const router = require("./routers/api.route");
-dotenv.config();
 
 /**
  * Configure the Express Server
  */
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 connectDB();

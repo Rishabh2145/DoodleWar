@@ -7,7 +7,7 @@ const player = require("../../models/player");
  */
 const accessToken = async (req, res) => {
     try {
-        const data = req.body.refreshToken;
+        const data = req.cookies.refreshToken;
         const decoded = await jwt.verify(
             data,
             process.env.REFRESH_SECRET,

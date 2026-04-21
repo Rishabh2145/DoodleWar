@@ -14,7 +14,7 @@ router.use('/auth', auth)
 /**
  * @desc User details Section from the JWT Tokens
  * @route /api/profile
- * @access private
+ * @access protected
  */
 router.use('/profile', middleware, profile)
 
