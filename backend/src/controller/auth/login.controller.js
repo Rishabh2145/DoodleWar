@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const player = require("../../models/player");
 const jwt = require("jsonwebtoken");
-const sendVerificationEmail = require("../../utils/sendEmail");
+const sendEmail = require("../../utils/sendEmail");
 
 const login = async (req, res) => {
     try {
@@ -14,7 +14,8 @@ const login = async (req, res) => {
         }
 
         if (!user.isVerified) {
-            await sendVerificationEmail(req.body.email, user.refreshToken);
+            const url = `${process.env.SERVER_URL}/auth/verify/${user.refreshToken}`;
+            await sendEmail(req.body.email, req.body.name, 2 , url);
             return res.status(400).json({
                 message: "Kindly Verify your account from the email link.",
                 success: false,

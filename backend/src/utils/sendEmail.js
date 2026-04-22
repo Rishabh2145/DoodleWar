@@ -1,17 +1,15 @@
 const tranEmailApi = require("../config/brevo");
 
-const sendVerificationEmail = async (userEmail, token) => {
-  const url = `http://localhost:5000/api/auth/verify/${token}`;
+const sendEmail = async (userEmail, name, tempID, url) => {
   try {
     await tranEmailApi.sendTransacEmail({
       sender: { email: "rishabh.kumar.intern@gmail.com", name: "DoodleWar" },
       to: [{ email: userEmail }],
-      subject: "Verify your account",
-      htmlContent: `
-        <h2>Email Verification</h2>
-        <p>Click below to verify your account:</p>
-        <a href="${url}">${url}</a>
-      `,
+      templateId: tempID,
+      params: {
+        name: name,
+        url: url
+      }
     });
 
   } catch (error) {
@@ -19,4 +17,4 @@ const sendVerificationEmail = async (userEmail, token) => {
   }
 };
 
-module.exports = sendVerificationEmail;
+module.exports = sendEmail;

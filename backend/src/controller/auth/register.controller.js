@@ -1,46 +1,46 @@
-const bcrypt = require('bcrypt');
-const player = require('../../models/player');
-const jwt = require('jsonwebtoken');
-const sendVerificationEmail = require('../../utils/sendEmail');
-
+const bcrypt = require("bcrypt");
+const player = require("../../models/player");
+const jwt = require("jsonwebtoken");
+const sendEmail = require("../../utils/sendEmail");
 
 /**
  * @route POST /api/auth/register
  * @desc Register User by Email Password and User-Name
- * @access public 
+ * @access public
  */
-const register = async(req, res) => {
-    const user = await player.findOne({email: req.body.email});
-    if(user){
+const register = async (req, res) => {
+    const user = await player.findOne({ email: req.body.email });
+    if (user) {
         return res.status(400).json({
             message: "Email Already Registered. Kindly Login!",
-            success: false
-        })
+            success: false,
+        });
     }
     const refreshToken = jwt.sign(
-                {email : req.body.email, name: req.body.name},
-                process.env.REFRESH_SECRET,
-                {expiresIn: '7d'}
-            )
+        { email: req.body.email, name: req.body.name },
+        process.env.REFRESH_SECRET,
+        { expiresIn: "7d" },
+    );
     const newUser = await player.create({
         name: req.body.name,
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 12),
-        refreshToken
-    })
+        refreshToken,
+    });
 
     if (newUser) {
-        sendVerificationEmail(req.body.email, refreshToken);
+        const url = `${process.env.SERVER_URL}/auth/verify/${refreshToken}`;
+        //sendEmail(req.body.email, req.body.name, 2, url);
         return res.status(200).json({
             message: "Please Verify your account as Next Step.",
-            success: true
-        })
+            success: true,
+        });
     }
 
     return res.status(500).json({
         message: "Something went wrong",
-        success: false
-    })
-}
+        success: false,
+    });
+};
 
-module.exports = register
+module.exports = register;

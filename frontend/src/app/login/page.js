@@ -7,10 +7,12 @@ import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import { useLoginMutation } from "@/store/api/auth/login";
 import { toast } from "react-toastify";
+import { useRegisterMutation } from "@/store/api/auth/register";
 
 export default function Page() {
     const [isLogin, setIsLogin] = useState(true);
     const [login, { isLoading }] = useLoginMutation();
+    const [registerForm, {}] = useRegisterMutation();
     const router = useRouter();
     const cred = useFormik({
         initialValues: {
@@ -21,13 +23,13 @@ export default function Page() {
         onSubmit : async (value, {resetForm}) => {
             try{
                 const res = await login(value).unwrap();
-                console.log(res);
                 toast.success(res.message || "Login successful ✅");
                 router.replace('/battleground/create');
                 resetForm();
             }catch(err){
                 console.log(err);
                 toast.error(err?.data?.message || "Invalid credentials ❌");
+                resetForm();
             }
         }
     });
@@ -38,6 +40,19 @@ export default function Page() {
             email: "",
             password: "",
         },
+        enableReinitialize: true,
+        onSubmit: async (values, {resetForm}) => {
+            try{
+                const res = await registerForm(values).unwrap();
+                toast.success(res?.data?.message);
+                router.replace('/login');
+                resetForm();
+            } catch (err){
+                console.log(err);
+                toast.error(err?.data?.message);
+                resetForm();
+            }
+        }
     });
 
     return (
@@ -113,26 +128,29 @@ export default function Page() {
                                 ) : (
                                     <form
                                         className="w-[70%] flex flex-col gap-5 max-md:w-[90%]"
-                                        onSubmit={(e) => {
-                                            e.preventDefault;
-                                            router.replace("/battleground");
-                                        }}
+                                        onSubmit={register.handleSubmit}
                                     >
                                         <input
                                             type="text"
                                             placeholder="Name"
+                                            name="name"
+                                            onChange={register.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
 
                                         <input
                                             type="email"
                                             placeholder="Email"
+                                            name="email"
+                                            onChange = {register.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
 
                                         <input
                                             type="password"
                                             placeholder="Password"
+                                            name="password"
+                                            onChange = {register.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
 

@@ -4,6 +4,8 @@ const login = require('../controller/auth/login.controller');
 const accessToken = require('../controller/auth/token.controller');
 const verifyUser = require('../controller/auth/verify.controller');
 const logout = require('../controller/auth/logout.controller');
+const resetPass = require('../controller/auth/reset.controller');
+const resetLink = require('../controller/auth/forgot.controller');
 
 const router = Router();
 /**
@@ -40,5 +42,21 @@ router.post('/verify/:token', verifyUser);
  * @access public
  */
 router.post('/logout', logout);
+
+/**
+ * @desc Sending the reset password link to the user with accessToken
+ * @route POST /api/auth/forgot 
+ * @access public
+ */
+router.post('/forgot', resetLink);
+
+/**
+ * @desc Reseting the password of the user from the database
+ * @route POST /api/auth/reset
+ * @access private
+ */
+router.post('/reset/:token', resetPass);
+
+
 
 module.exports = router
