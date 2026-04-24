@@ -5,27 +5,54 @@ import Button from "@/components/Button";
 import Doodle from "@/components/Logo";
 import UserMenu from "@/components/UserMenu";
 import { useEffect, useState } from "react";
-import { useAuth } from '@/context/Auth'
-
-
+import { useAuth } from "@/context/Auth";
+import { useRoomGeneratorQuery } from "@/store/api/room/room";
+import Loading from "@/components/Loading";
 
 export default function Home() {
-    const [roomCode, setRoomCode] = useState(0);
-    const [players, setPlayers] = useState([null, null, null, null, null, null]);
-    
+    const [roomCode, setRoomCode] = useState("Loading...");
+    const [players, setPlayers] = useState([
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+    ]);
+    const { data, isLoading, error } = useRoomGeneratorQuery();
 
     useEffect(() => {
-    const code = Math.floor(100000 + Math.random() * 900000); // 6-digit
-    setRoomCode(code);
-}, []);
+        if (!data?.room) return;
 
+        setPlayers((prev) => {
+            const updated = [...prev];
+            const incomingPlayers = data.room.players || [];
 
+            let i = 0;
+
+            for (
+                let j = 0;
+                j < updated.length && i < incomingPlayers.length;
+                j++
+            ) {
+                if (updated[j] === null) {
+                    updated[j] = incomingPlayers[i].username;
+                    i++;
+                }
+            }
+
+            return updated;
+        });
+        setRoomCode(data?.room.roomCode);
+    }, [data]);
+
+    if(isLoading) return <Loading/>
     return (
         <div className="relative min-h-screen min-w-screen overflow-hidden">
             <Background />
             <div className="relative z-10 flex items-center justify-center min-h-screen text-white">
                 <div className="absolute top-10 right-10">
-                    <UserMenu/>
+                    <UserMenu />
                 </div>
                 <div className="flex flex-col h-screen w-screen justify-center gap-12 items-center">
                     <Doodle />
@@ -56,8 +83,9 @@ export default function Home() {
           bg-white/10 border border-white/10"
                                     >
                                         {players[i] ? (
-                                            <span className="text-white font-semibold">
-                                                {players[i]}
+                                            <span className="text-white font-semibold text-center flex flex-col items-center justify-center gap-2">
+                                                <p className="bg-blue-500 h-10 w-10 flex items-center justify-center rounded-full">{players[i].charAt(0)}</p>
+                                                <p>{players[i].split("")}</p>
                                             </span>
                                         ) : (
                                             <div className="w-10 h-10 rounded-full bg-white/20 animate-pulse"></div>
@@ -67,7 +95,10 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    <Button title='Start Game' link='/battleground/playfriend'/>
+                    <Button
+                        title="Start Game"
+                        link="/battleground/playfriend"
+                    />
                 </div>
             </div>
         </div>

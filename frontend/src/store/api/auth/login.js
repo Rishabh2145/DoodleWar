@@ -1,3 +1,4 @@
+
 import { baseApi } from "../baseApi";
 
 const loginAPI = baseApi.injectEndpoints({
@@ -16,8 +17,15 @@ const loginAPI = baseApi.injectEndpoints({
                 url: "/auth/logout",
                 method : "POST",
             })
+        }),
+        verify: builder.mutation({
+            query: (token)=> ({
+                url: '/auth/verify',
+                method: "POST",
+                body: {token}
+            })
         })
     })
 })
 
-export const { useLoginMutation , useLogoutMutation } = loginAPI
+export const { useLoginMutation , useLogoutMutation, useVerifyMutation } = loginAPI

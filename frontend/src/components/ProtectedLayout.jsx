@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/Auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loading from "./Loading";
 
 export default function ProtectedLayout({ children }) {
   const { user, loading } = useAuth();
@@ -14,7 +15,7 @@ export default function ProtectedLayout({ children }) {
     }
   }, [loading, user]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loading/>;
 
   if (!user) return null;
 

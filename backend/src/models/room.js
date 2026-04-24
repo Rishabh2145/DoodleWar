@@ -14,21 +14,18 @@ const mongoose = require("mongoose");
  */
 const roomSchema = new mongoose.Schema(
     {
-        // 🔑 Unique room code (6 digit)
         roomCode: {
             type: String,
             required: true,
             unique: true,
         },
 
-        // 👑 Creator of room
         host: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Player",
             required: true,
         },
 
-        // 👥 Players in room
         players: [
             {
                 player: {
@@ -54,7 +51,7 @@ const roomSchema = new mongoose.Schema(
 
         roundTime: {
             type: Number,
-            default: 30, // seconds
+            default: 30,
         },
 
         currentRound: {
@@ -77,9 +74,10 @@ const roomSchema = new mongoose.Schema(
                 },
             },
         ],
-        expiry: {
+        expiresAt: {
             type: Date,
-            default: Date.now() + 24 * 60 * 60 * 1000,
+            default: () => new Date(Date.now() +  24 * 60 * 60 * 1000),
+            index: { expires: 0 },
         },
     },
     { timestamps: true },

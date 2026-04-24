@@ -29,8 +29,7 @@ const register = async (req, res) => {
     });
 
     if (newUser) {
-        const url = `${process.env.SERVER_URL}/auth/verify/${refreshToken}`;
-        //sendEmail(req.body.email, req.body.name, 2, url);
+        const url = `${process.env.CLIENT_URL}/login/verify/?token=${user.refreshToken}`;
         return res.status(200).json({
             message: "Please Verify your account as Next Step.",
             success: true,

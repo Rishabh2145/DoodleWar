@@ -1,12 +1,12 @@
 "use client"
 
 import { Suspense } from "react"
-import ResetPassword from "./Reset"
+import VerifyPage from "./Verify"
 
-export default function Reset () {
+export default function Verify() {
   return (
     <Suspense>
-      <ResetPassword/>
+      <VerifyPage/>
     </Suspense>
   )
 }

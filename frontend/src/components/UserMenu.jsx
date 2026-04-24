@@ -56,7 +56,7 @@ export default function UserMenu() {
             <span className="text-blue-400 font-semibold text-sm">
               {user.name}
             </span>
-            <span className="text-gray-400 text-xs">
+            <span className="text-gray-400 text-xs truncate">
               {user.email}
             </span>
           </div>

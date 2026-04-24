@@ -14,8 +14,8 @@ const login = async (req, res) => {
         }
 
         if (!user.isVerified) {
-            const url = `${process.env.SERVER_URL}/auth/verify/${user.refreshToken}`;
-            await sendEmail(req.body.email, req.body.name, 2 , url);
+            const url = `${process.env.CLIENT_URL}/login/verify/?token=${user.refreshToken}`;
+            await sendEmail(req.body.email, req.body.name, 2, url);
             return res.status(400).json({
                 message: "Kindly Verify your account from the email link.",
                 success: false,
@@ -32,13 +32,13 @@ const login = async (req, res) => {
         }
 
         const accessToken = jwt.sign(
-            { email: user.email, name: user.name },
+            { id: user._id, email: user.email, name: user.name },
             process.env.ACCESS_SECRET,
             { expiresIn: "15m" },
         );
 
         const refreshToken = jwt.sign(
-            { email: user.email, name: user.name },
+            { id: user._id, email: user.email, name: user.name },
             process.env.REFRESH_SECRET,
             { expiresIn: "7d" },
         );
@@ -46,8 +46,8 @@ const login = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: false, 
-            sameSite: "strict", 
+            secure: false,
+            sameSite: "strict",
             maxAge: 15 * 60 * 1000, // 15 minutes
         });
 
