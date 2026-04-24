@@ -11,6 +11,8 @@ import { useRegisterMutation } from "@/store/api/auth/register";
 
 export default function Page() {
     const [isLogin, setIsLogin] = useState(true);
+    const [status, setStatus] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [login, { isLoading }] = useLoginMutation();
     const [registerForm, {}] = useRegisterMutation();
     const router = useRouter();
@@ -20,18 +22,18 @@ export default function Page() {
             password: "",
         },
         enableReinitialize: true,
-        onSubmit : async (value, {resetForm}) => {
-            try{
+        onSubmit: async (value, { resetForm }) => {
+            try {
                 const res = await login(value).unwrap();
                 toast.success(res.message || "Login successful ✅");
-                router.replace('/battleground/create');
+                router.replace("/battleground");
                 resetForm();
-            }catch(err){
+            } catch (err) {
                 console.log(err);
                 toast.error(err?.data?.message || "Invalid credentials ❌");
                 resetForm();
             }
-        }
+        },
     });
 
     const register = useFormik({
@@ -41,18 +43,21 @@ export default function Page() {
             password: "",
         },
         enableReinitialize: true,
-        onSubmit: async (values, {resetForm}) => {
-            try{
+        onSubmit: async (values, { resetForm }) => {
+            if (values.password != confirmPassword) {
+                return setStatus("Passwords do not match");
+            }
+            try {
                 const res = await registerForm(values).unwrap();
                 toast.success(res?.data?.message);
-                router.replace('/login');
+                router.replace("/login");
                 resetForm();
-            } catch (err){
+            } catch (err) {
                 console.log(err);
                 toast.error(err?.data?.message);
-                resetForm();
+                setStatus(err?.data?.message || "Something Went Wrong!");
             }
-        }
+        },
     });
 
     return (
@@ -117,13 +122,18 @@ export default function Page() {
                                             onChange={cred.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
-
                                         <button
                                             type="submit"
-                                            className="mt-4 bg-blue-500 hover:bg-blue-600 transition rounded-xl py-3 text-lg text-white font-semibold shadow-lg"
+                                            className="mt-2 bg-blue-500 hover:bg-blue-600 transition rounded-xl py-3 text-lg text-white font-semibold shadow-lg"
                                         >
                                             Login
                                         </button>
+                                        <a
+                                            className="flex justify-center cursor-pointer "
+                                            href="/login/forgot-password"
+                                        >
+                                            Forgot Password?
+                                        </a>
                                     </form>
                                 ) : (
                                     <form
@@ -142,7 +152,7 @@ export default function Page() {
                                             type="email"
                                             placeholder="Email"
                                             name="email"
-                                            onChange = {register.handleChange}
+                                            onChange={register.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
 
@@ -150,16 +160,28 @@ export default function Page() {
                                             type="password"
                                             placeholder="Password"
                                             name="password"
-                                            onChange = {register.handleChange}
+                                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                                            title="Must contain at least 8 characters, including uppercase, lowercase, number, and special character"
+                                            onChange={register.handleChange}
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
 
                                         <input
                                             type="password"
+                                            value={confirmPassword}
+                                            onChange={(e) =>
+                                                setConfirmPassword(
+                                                    e.target.value,
+                                                )
+                                            }
                                             placeholder="Confirm Password"
                                             className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
-
+                                        {status && (
+                                            <p className="text-center text-sm text-red-400">
+                                                {status}
+                                            </p>
+                                        )}
                                         <button
                                             type="submit"
                                             className="mt-4 bg-blue-500 hover:bg-blue-600 transition rounded-xl py-3 text-lg text-white font-semibold shadow-lg"

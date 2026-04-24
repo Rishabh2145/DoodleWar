@@ -24,17 +24,17 @@ router.post('/login', login);
 
 /**
  * @desc Refreshing the session using the refresh token to generate new Access Token
- * @route POST /api/auth/refresh
+ * @route GET /api/auth/refresh
  * @access public
  */
-router.post('/refresh', accessToken);
+router.get('/refresh', accessToken);
 
 /**
  * @desc Verify account by sending verification link in the mail through BREVO API
  * @route POST /api/auth/verify/token
  * @access public
  */
-router.post('/verify/:token', verifyUser);
+router.post('/verify', verifyUser);
 
 /**
  * @desc Logout user and remove all the cookies that have access tokens and refresh tokens
@@ -55,7 +55,7 @@ router.post('/forgot', resetLink);
  * @route POST /api/auth/reset
  * @access private
  */
-router.post('/reset/:token', resetPass);
+router.post('/reset', resetPass);
 
 
 

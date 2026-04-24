@@ -3,6 +3,7 @@
 import Doodle from "@/components/Logo";
 import Background from "@/components/AnimateBg";
 import { useState, useEffect, useRef } from "react";
+import UserMenu from "@/components/UserMenu";
 
 export default function WarPage() {
     const [assignWord, setAssignWord] = useState("Apple");
@@ -107,7 +108,7 @@ export default function WarPage() {
 
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">
-                            U
+                            <UserMenu />
                         </div>
                     </div>
                 </header>
@@ -117,14 +118,14 @@ export default function WarPage() {
                     {/* LEFT TOOLBAR */}
                     <aside className="w-full md:w-20 flex  md:flex-col justify-center items-center gap-4 md:gap-6 py-3 md:py-6 bg-black/20 backdrop-blur-md border-b md:border-b-0 md:border-r border-white/10">
                         <button
-                            className={`w-10 h-10 md:w-12 md:h-12  rounded-xl hover:bg-blue-500/30 transition ${tool == "pen" ? 'bg-blue-500/30' : 'bg-white/10'}`}
+                            className={`w-10 h-10 md:w-12 md:h-12  rounded-xl hover:bg-blue-500/30 transition ${tool == "pen" ? "bg-blue-500/30" : "bg-white/10"}`}
                             onClick={() => setTool("pen")}
                         >
                             ✏️
                         </button>
 
                         <button
-                            className={`w-10 h-10 md:w-12 md:h-12  rounded-xl hover:bg-blue-500/30 transition ${tool == "eraser" ? 'bg-blue-500/30' : 'bg-white/10'}`}
+                            className={`w-10 h-10 md:w-12 md:h-12  rounded-xl hover:bg-blue-500/30 transition ${tool == "eraser" ? "bg-blue-500/30" : "bg-white/10"}`}
                             onClick={() => setTool("eraser")}
                         >
                             🧽

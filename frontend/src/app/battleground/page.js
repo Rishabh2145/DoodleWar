@@ -5,6 +5,7 @@ import Background from "@/components/AnimateBg";
 import { useRouter } from "next/navigation";
 import Doodle from "@/components/Logo";
 import Button from "@/components/Button";
+import UserMenu from "@/components/UserMenu";
 
 export default function Home() {
     const router = useRouter();
@@ -13,6 +14,9 @@ export default function Home() {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 flex items-center justify-center min-h-screen text-white">
+                <div className="absolute top-10 right-10">
+                    <UserMenu />
+                </div>
                 <div className="flex flex-col h-screen w-screen justify-center gap-12 items-center">
                     <Doodle />
                     <div className="w-4/5 flex justify-around px-4 mt-6 max-md:w-8/9">
@@ -60,7 +64,10 @@ export default function Home() {
           text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                     />
 
-                                    <Button title='Join Room' link='/battleground/create'/>
+                                    <Button
+                                        title="Join Room"
+                                        link="/battleground/create"
+                                    />
                                 </div>
                             )}
 
@@ -71,7 +78,10 @@ export default function Home() {
                                         Create a room and invite your friends
                                     </p>
 
-                                    <Button title='Create Room' link='/battleground/create'/>
+                                    <Button
+                                        title="Create Room"
+                                        link="/battleground/create"
+                                    />
                                 </div>
                             )}
 
@@ -82,7 +92,10 @@ export default function Home() {
                                         Play instantly without joining a room
                                     </p>
 
-                                    <Button title='Start Solo' link='/battleground/solo'/>
+                                    <Button
+                                        title="Start Solo"
+                                        link="/battleground/solo"
+                                    />
                                 </div>
                             )}
                         </div>

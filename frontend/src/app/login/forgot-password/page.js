@@ -2,19 +2,35 @@
 
 import { useState } from "react";
 import Background from "@/components/AnimateBg";
+import { useFormik } from "formik";
+import { useForgotMutation } from "@/store/api/auth/forgot";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [forgot, {isLoading}] = useForgotMutation();
 
-    // 🔥 Call backend API here later
-    console.log("Send reset link to:", email);
-
-    setSent(true);
-  };
+  const resetEmail = useFormik({
+    initialValues: {
+      email: ""
+    },
+    onSubmit: async (values, {resetForm}) => {
+      try{
+        const res = await forgot(values).unwrap();
+        toast.success(res?.data?.message);
+        if(res.success){
+          setSent(true);
+        }
+        console.log(res)
+        resetForm();
+      } catch (err){
+        toast.error(err?.data?.message);
+        console.log(err);
+        resetForm();
+      }
+    }
+  })
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -41,13 +57,13 @@ export default function ForgotPassword() {
               </p>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <form onSubmit={resetEmail.handleSubmit} className="flex flex-col gap-4">
 
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={resetEmail.handleChange}
+                  name="email"
                   required
                   className="bg-white/10 border border-white/20 rounded-xl py-3 px-4 
                   text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -57,8 +73,9 @@ export default function ForgotPassword() {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-600 transition rounded-xl py-3 
                   text-white font-semibold shadow-lg"
+                  disabled={isLoading}
                 >
-                  Send Reset Link
+                  {isLoading ? "Loading..." : 'Send Reset Link'}
                 </button>
               </form>
             </>

@@ -3,13 +3,16 @@
 import Background from "@/components/AnimateBg";
 import Button from "@/components/Button";
 import Doodle from "@/components/Logo";
+import UserMenu from "@/components/UserMenu";
 import { useEffect, useState } from "react";
+import { useAuth } from '@/context/Auth'
 
 
 
 export default function Home() {
     const [roomCode, setRoomCode] = useState(0);
     const [players, setPlayers] = useState([null, null, null, null, null, null]);
+    
 
     useEffect(() => {
     const code = Math.floor(100000 + Math.random() * 900000); // 6-digit
@@ -21,6 +24,9 @@ export default function Home() {
         <div className="relative min-h-screen min-w-screen overflow-hidden">
             <Background />
             <div className="relative z-10 flex items-center justify-center min-h-screen text-white">
+                <div className="absolute top-10 right-10">
+                    <UserMenu/>
+                </div>
                 <div className="flex flex-col h-screen w-screen justify-center gap-12 items-center">
                     <Doodle />
                     <div

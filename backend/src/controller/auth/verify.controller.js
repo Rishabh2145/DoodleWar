@@ -7,7 +7,7 @@ const sendEmail = require("../../utils/sendEmail");
  * @access public
  */
 const verifyUser = async (req, res) => {
-    const token = req.params.token;
+    const token = req.body.token;
 
     try {
         const decoded = jwt.verify(token, process.env.REFRESH_SECRET);

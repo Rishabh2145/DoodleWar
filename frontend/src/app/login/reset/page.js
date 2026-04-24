@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Background from "@/components/AnimateBg";
+import { useResetMutation } from "@/store/api/auth/forgot";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();
@@ -10,46 +13,31 @@ export default function ResetPassword() {
 
   const token = searchParams.get("token");
 
-  const [password, setPassword] = useState("");
+  const pass = useFormik({
+    initialValues: {
+      password: "",
+      token
+    },
+    enableReinitialize: true,
+    onSubmit: async (values, {resetForm}) => {
+      if(values.password != confirmPassword){
+        return setStatus("Passwords do not match");
+      }
+      try{
+        const res = await reset(values).unwrap();
+        toast.success(res?.data?.message);
+        router.replace('/login');
+      } catch (err){
+        console.log(err);
+        toast.error(err?.data?.message);
+        setStatus(err?.data?.message || "Something went wrong!");
+      }
+    }
+  })
+  const [reset, {isLoading}] = useResetMutation();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      return setStatus("Passwords do not match");
-    }
-
-    try {
-      const res = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        return setStatus(data.message || "Something went wrong");
-      }
-
-      setStatus("Password reset successfully ✅");
-
-      // redirect after 2 sec
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-
-    } catch (err) {
-      setStatus("Error resetting password");
-    }
-  };
 
   useEffect(() => {
     if (!token) {
@@ -81,13 +69,13 @@ export default function ResetPassword() {
 
           {/* Form */}
           {!status.includes("successfully") && (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={pass.handleSubmit} className="flex flex-col gap-4">
 
               <input
                 type="password"
                 placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                onChange={pass.handleChange}
                 required
                 className="bg-white/10 border border-white/20 rounded-xl py-3 px-4 
                 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -107,12 +95,12 @@ export default function ResetPassword() {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-600 transition rounded-xl py-3 
                 text-white font-semibold shadow-lg"
+                disabled={isLoading}
               >
-                Reset Password
+                {isLoading ? "Loading..." :'Reset Password'}
               </button>
             </form>
           )}
-
         </div>
       </div>
     </div>

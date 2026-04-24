@@ -7,7 +7,7 @@ const player = require('../../models/player');
  * @access private
  */
 const resetPass = async (req, res) => {
-    const token = req.params.token;
+    const token = req.body.token;
     try{
         const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
         

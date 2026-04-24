@@ -33,7 +33,7 @@ const resetLink = async (req, res) => {
                 expiresIn: "15m",
             },
         );
-        const url = `${process.env.CLIENT_URL}/reset/${accessToken}`;
+        const url = `${process.env.CLIENT_URL}/login/reset?token=${accessToken}`;
         
         await sendEmail(req.body.email, user.name, 4, url);
         

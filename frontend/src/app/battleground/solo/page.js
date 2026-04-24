@@ -2,6 +2,7 @@
 
 import Background from "@/components/AnimateBg";
 import { useState, useEffect, useRef } from "react";
+import UserMenu from "@/components/UserMenu";
 
 export default function WarPage() {
     const [assignWord, setAssignWord] = useState("Apple");
@@ -9,7 +10,7 @@ export default function WarPage() {
     const chatRef = useRef(null);
     const canvasRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
-    const [tool, setTool] = useState("pen"); 
+    const [tool, setTool] = useState("pen");
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -106,7 +107,7 @@ export default function WarPage() {
 
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-500 flex items-center justify-center font-bold">
-                            U
+                            <UserMenu/>
                         </div>
                     </div>
                 </header>

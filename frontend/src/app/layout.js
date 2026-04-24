@@ -1,7 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import { Providers } from "@/store/provider";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "@/context/Auth";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -26,8 +28,10 @@ export default function RootLayout({ children }) {
         >
             <body className="min-h-full flex flex-col">
                 {" "}
-                <Providers>{children}</Providers>
-                <ToastContainer position="top-right" autoClose={2000}/>
+                <Providers>
+                    <AuthProvider>{children}</AuthProvider>
+                </Providers>
+                <ToastContainer toastClassName="custom-toast" />
             </body>
         </html>
     );

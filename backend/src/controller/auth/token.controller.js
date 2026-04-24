@@ -32,7 +32,13 @@ const accessToken = async (req, res) => {
                 expiresIn: "15m",
             },
         );
-
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: false, 
+            sameSite: "strict", 
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+        
         return res.status(200).json({
             accessToken
         })
